@@ -17,6 +17,110 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const approveUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!existingUser) {
+      return res.status(404).json({
+        message: "User doesn't exist!",
+      });
+    }
+
+    const approveUser = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        status: "ACTIVE",
+      },
+    });
+
+    return res.status(200).json({
+      message: "User approved successfully!",
+      user: {
+        id: approveUser.id,
+        name: approveUser.name,
+        role: approveUser.role,
+        status: approveUser.status,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message || "Failed to approve user.",
+    });
+  }
+};
+
+const disableUserAccount = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!existingUser)
+      return res.status(404).json({
+        message: "User doesn't exists!",
+      });
+
+    const updatedUser = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        status: "DISABLED",
+      },
+    });
+
+    return res.status(200).json({
+      message: "User disabled successfully!",
+      user: {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        role: updatedUser.role,
+        status: updatedUser.status,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message || "Failed to disable user's account.",
+    });
+  }
+};
+
+const deleteUserAccount = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!existingUser)
+      return res.status(404).json({
+        message: "User doesn't exists!",
+      });
+
+    await prisma.user.delete({
+      where: { id: Number(id) },
+    });
+
+    return res.json({
+      message: "User deleted successfully!",
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message || "Failed to delete user.",
+    });
+  }
+};
+
 const registerUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
@@ -140,4 +244,84 @@ const userLogout = async (req: Request, res: Response) => {
   }
 };
 
-export { getAllUsers, registerUser, userLogin, userLogout };
+const userProfile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    res.json({
+      message: "Fetched current logged in user",
+      user: {
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message || "Internal server error",
+    });
+  }
+};
+
+const editProfile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const { name, email } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.name = name;
+    user.email = email;
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        name: user.name,
+        email: user.email,
+      },
+    });
+
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message || "Internal server error",
+    });
+  }
+};
+
+export {
+  getAllUsers,
+  approveUser,
+  disableUserAccount,
+  deleteUserAccount,
+  registerUser,
+  userLogin,
+  userLogout,
+  userProfile,
+  editProfile,
+};
