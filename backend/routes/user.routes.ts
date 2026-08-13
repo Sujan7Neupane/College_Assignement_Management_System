@@ -1,5 +1,10 @@
 import express from "express";
-import { getAllUsers, registerUser } from "../controllers/user.controllers.ts";
+import {
+  getAllUsers,
+  registerUser,
+  userLogin,
+  userLogout,
+} from "../controllers/user.controllers.ts";
 
 const router = express.Router();
 
@@ -7,5 +12,7 @@ const router = express.Router();
 router.get("/users", getAllUsers);
 
 router.post("/register", registerUser);
+router.post("/login", userLogin);
+router.post("/logout", userLogout);
 
 export default router;
