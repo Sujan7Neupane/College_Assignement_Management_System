@@ -62,4 +62,21 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { checkAuth, isAdmin };
+// Allow only teacher
+const isTeacher = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { role } = req.user;
+
+    if (role !== "TEACHER") {
+      return res
+        .status(403)
+        .json({ message: "Access denied. Teacher access required" });
+    }
+
+    next();
+  } catch (error: any) {
+    res.json({ message: error.message });
+  }
+};
+
+export { checkAuth, isAdmin, isTeacher };

@@ -27,12 +27,66 @@ enum UserStatus {
 
 //User model
 model User {
-  id        Int        @id @default(autoincrement())
-  name      String
-  email     String     @unique
-  password  String
-  role      Role       @default(STUDENT) //Prevents {role: admin} from tempering
-  status    UserStatus @default(PENDING)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  password String
+  role     Role       @default(STUDENT) //Prevents {role: admin} from tempering
+  status   UserStatus @default(PENDING)
+
+  // relation with user table
+  assignments Assignment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Assignment {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  dueDate     DateTime
+
+  fileUrl      String?
+  fileName     String?
+  fileType     String?
+  filePublicId String?
+
+  // relation with user table
+  teacher   User? @relation(fields: [teacherId], references: [id])
+  teacherId Int
+
+  // relation with submission table
+  submissions Submission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teacherId, title])
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  GRADED
+}
+
+model Submission {
+  id Int @id @default(autoincrement())
+
+  fileUrl  String
+  fileName String
+  fileType String
+
+  submittedAt DateTime @default(now())
+
+  grade    Float?
+  feedback String?
+
+  studentId Int
+
+  status SubmissionStatus @default(SUBMITTED)
+
+  // relation with submission table
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  assignmentId Int
 }

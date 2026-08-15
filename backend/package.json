@@ -32,16 +32,20 @@
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0",
     "pg": "^8.23.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^26.2.0",
     "nodemon": "^3.1.14",
     "prisma": "^7.9.1",
     "tsx": "^4.23.12"
