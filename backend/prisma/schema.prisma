@@ -34,8 +34,11 @@ model User {
   role     Role       @default(STUDENT) //Prevents {role: admin} from tempering
   status   UserStatus @default(PENDING)
 
-  // relation with user table
+  // relation with assignment table
   assignments Assignment[]
+
+  // relation with submission table
+  submissions Submission[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -66,6 +69,7 @@ model Assignment {
 }
 
 enum SubmissionStatus {
+  PENDING
   SUBMITTED
   GRADED
 }
@@ -73,9 +77,10 @@ enum SubmissionStatus {
 model Submission {
   id Int @id @default(autoincrement())
 
-  fileUrl  String
-  fileName String
-  fileType String
+  fileUrl      String
+  fileName     String
+  fileType     String
+  filePublicId String
 
   submittedAt DateTime @default(now())
 
@@ -89,4 +94,10 @@ model Submission {
   // relation with submission table
   assignment   Assignment? @relation(fields: [assignmentId], references: [id])
   assignmentId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student   User?    @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, assignmentId])
 }

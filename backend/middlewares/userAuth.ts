@@ -79,4 +79,21 @@ const isTeacher = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { checkAuth, isAdmin, isTeacher };
+// Allow only students
+const isStudent = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { role } = req.user;
+
+    if (role !== "STUDENT") {
+      return res
+        .status(403)
+        .json({ message: "Access denied. Student access required" });
+    }
+
+    next();
+  } catch (error: any) {
+    res.json({ message: error.message });
+  }
+};
+
+export { checkAuth, isAdmin, isTeacher, isStudent };
