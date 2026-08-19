@@ -274,6 +274,8 @@ const editProfile = async (req: Request, res: Response) => {
     const { id } = req.user;
     const { name, email } = req.body;
 
+    // console.log(name);
+
     const user = await prisma.user.findUnique({
       where: {
         id: Number(id),
@@ -286,16 +288,16 @@ const editProfile = async (req: Request, res: Response) => {
       });
     }
 
-    user.name = name;
-    user.email = email;
+    // user.name = name;
+    // user.email = email;
 
     const updatedUser = await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
-        name: user.name,
-        email: user.email,
+        name,
+        email,
       },
     });
 
@@ -305,6 +307,8 @@ const editProfile = async (req: Request, res: Response) => {
         id: updatedUser.id,
         name: updatedUser.name,
         email: updatedUser.email,
+        role: updatedUser.role,
+        status: updatedUser.status,
       },
     });
   } catch (error: any) {

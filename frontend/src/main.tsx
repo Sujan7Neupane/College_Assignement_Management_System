@@ -13,6 +13,8 @@ import ViewAssignment from "./pages/ViewAssignment.tsx";
 import HomeRoute from "./components/HomeRoute.tsx";
 import TeacherRoute from "./components/TeacherRoute.tsx";
 import AddAssignment from "./pages/AddAssignment.tsx";
+import TeacherProfile from "./pages/TeacherProfile.tsx";
+import EditTeacherProfile from "./pages/EditTeacherProfile.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -35,6 +37,11 @@ createRoot(document.getElementById("root")!).render(
               element={<ViewAssignment />}
             />
             <Route path="teacher/assignments/add" element={<AddAssignment />} />
+            <Route path="teacher/profile" element={<TeacherProfile />} />
+            <Route
+              path="teacher/profile/edit"
+              element={<EditTeacherProfile />}
+            />
           </Route>
 
           {/* Private Routes for Students */}
