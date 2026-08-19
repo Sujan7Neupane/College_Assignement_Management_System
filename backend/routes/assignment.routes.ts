@@ -5,6 +5,7 @@ import {
   deleteAssignment,
   getAllAssignments,
   getAssignmentById,
+  getTeachersAssignment,
   updateAssignment,
 } from "../controllers/assignement.controllers.ts";
 import upload from "../middlewares/multer-middleware.ts";
@@ -13,6 +14,8 @@ const router = express.Router();
 
 router.get("/all", checkAuth, getAllAssignments);
 router.get("/:id", checkAuth, getAssignmentById);
+
+router.get("/teacher/assignment", checkAuth, isTeacher, getTeachersAssignment);
 
 router.post(
   "/add",

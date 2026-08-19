@@ -62,6 +62,39 @@ const createAssignment = async (req: Request, res: Response) => {
   }
 };
 
+const getTeachersAssignment = async (req: Request, res: Response) => {
+  try {
+    const { id: teacherId } = req.user;
+    // console.log(teacherId);
+
+    const assignments = await prisma.assignment.findMany({
+      where: {
+        teacherId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // console.log(assignments);
+
+    if (!assignments) {
+      return res.status(404).json({
+        message: "Assignments not found.",
+      });
+    }
+
+    return res.json({
+      message: "Fetched teacher assignment successfully.",
+      assignments,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Failed to fetch assignments.",
+    });
+  }
+};
+
 const getAllAssignments = async (req: Request, res: Response) => {
   try {
     const assignments = await prisma.assignment.findMany();
@@ -193,18 +226,27 @@ const updateAssignment = async (req: Request, res: Response) => {
 const deleteAssignment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { id: teacherId } = req.user;
+    // console.log(id);
 
-    const assignment = await prisma.assignment.findFirst({
+    const { id: teacherId } = req.user;
+    // console.log(teacherId);
+
+    const assignment = await prisma.assignment.findUnique({
       where: {
         id: Number(id),
-        teacherId,
       },
     });
 
     if (!assignment) {
       return res.status(404).json({
-        message: "Assignment not found!",
+        message: "Assignment not found.",
+      });
+    }
+
+    if (assignment.teacherId !== teacherId) {
+      return res.status(403).json({
+        message:
+          "You cannot delete this assignment because it does not belong to you.",
       });
     }
 
@@ -230,6 +272,7 @@ const deleteAssignment = async (req: Request, res: Response) => {
 
 export {
   getAllAssignments,
+  getTeachersAssignment,
   createAssignment,
   getAssignmentById,
   updateAssignment,

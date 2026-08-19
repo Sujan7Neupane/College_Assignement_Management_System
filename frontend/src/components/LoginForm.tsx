@@ -28,10 +28,10 @@ const LoginForm = () => {
   console.log(userInfo);
 
   useEffect(() => {
-    if (userInfo?.role === "TEACHER") {
+    if (!userInfo) return;
+
+    if (userInfo.role === "TEACHER") {
       navigate("/teacher/dashboard");
-    } else if (userInfo?.role === "STUDENT") {
-      navigate("/student/dashboard");
     }
   }, [userInfo, navigate]);
 

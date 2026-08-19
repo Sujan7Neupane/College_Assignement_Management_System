@@ -9,13 +9,14 @@ import {
   FileText,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useLogoutMutation } from "../redux/slices/authApiSlice";
 import { removeCredentials } from "../redux/slices/authSlice";
 import toast from "react-hot-toast";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userInfo } = useSelector((state: any) => state.auth);
   // console.log(userInfo);
 
@@ -23,16 +24,9 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      console.log("1");
-
-      const response = await logout().unwrap();
-
-      console.log("2", response);
-
+      await logout().unwrap();
       dispatch(removeCredentials());
-
-      console.log("3");
-
+      navigate("/");
       toast.success("Logged out successfully");
     } catch (error: any) {
       console.log("ERROR:", error);
@@ -142,7 +136,7 @@ const Header = () => {
             <div tabIndex={0} role="button" className="btn btn-ghost gap-2">
               <div className="avatar placeholder">
                 <div className="bg-primary text-primary-content w-9 h-9 rounded-full flex items-center justify-center">
-                  <span>{userInfo.name.charAt(0).toUpperCase()}</span>
+                  <span>{userInfo?.name.charAt(0).toUpperCase()}</span>
                 </div>
               </div>
 

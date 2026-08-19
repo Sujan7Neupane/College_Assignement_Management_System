@@ -1,14 +1,18 @@
-import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router";
+import { useSelector } from "react-redux";
 
-function TeacherRoute() {
+const TeacherRoute = () => {
   const { userInfo } = useSelector((state: any) => state.auth);
 
-  if (!userInfo || userInfo.role !== "TEACHER") {
+  if (!userInfo) {
     return <Navigate to="/login" replace />;
   }
 
+  if (userInfo.role !== "TEACHER") {
+    return <Navigate to="/" replace />;
+  }
+
   return <Outlet />;
-}
+};
 
 export default TeacherRoute;
