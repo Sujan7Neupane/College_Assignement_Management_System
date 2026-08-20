@@ -97,7 +97,26 @@ const getTeachersAssignment = async (req: Request, res: Response) => {
 
 const getAllAssignments = async (req: Request, res: Response) => {
   try {
-    const assignments = await prisma.assignment.findMany();
+    const { id: studentId } = req.user;
+    const assignments = await prisma.assignment.findMany({
+      //adding teacher name and email like populate in mongodb
+      include: {
+        teacher: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        submissions: {
+          where: {
+            studentId,
+          },
+          select: {
+            status: true,
+          },
+        },
+      },
+    });
     if (!assignments) {
       return res.status(404).json({
         message: "No assignments",
@@ -115,10 +134,24 @@ const getAllAssignments = async (req: Request, res: Response) => {
 const getAssignmentById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const { id: studentId } = req.user;
 
     const assignment = await prisma.assignment.findUnique({
       where: {
         id: Number(id),
+      },
+      include: {
+        teacher: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        submissions: {
+          where: {
+            studentId,
+          },
+        },
       },
     });
 

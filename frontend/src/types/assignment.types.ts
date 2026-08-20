@@ -1,3 +1,11 @@
+import type { Submission } from "./submission.types";
+
+export interface Teacher {
+  id: number;
+  name: string;
+  email: string;
+}
+
 export interface Assignment {
   id: number;
   title: string;
@@ -8,6 +16,9 @@ export interface Assignment {
   fileType: string;
   fileUrl: string;
   teacherId: number;
+  teacher: Teacher;
+
+  submissions: Submission[];
   createdAt: string;
   updatedAt: string;
 }

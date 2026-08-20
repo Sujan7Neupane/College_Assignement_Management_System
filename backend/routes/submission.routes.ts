@@ -13,7 +13,7 @@ const router = express.Router();
 
 // student submit
 router.post(
-  "/add/assignment/:assignmentId",
+  "/submit/assignment/:assignmentId",
   checkAuth,
   isStudent,
   upload.single("file"),

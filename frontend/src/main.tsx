@@ -15,6 +15,10 @@ import TeacherRoute from "./components/TeacherRoute.tsx";
 import AddAssignment from "./pages/AddAssignment.tsx";
 import TeacherProfile from "./pages/TeacherProfile.tsx";
 import EditTeacherProfile from "./pages/EditTeacherProfile.tsx";
+import StudentRoute from "./components/StudentRoute.tsx";
+import StudentAssignment from "./pages/StudentAssignment.tsx";
+import StudentDashboard from "./pages/StudentDashboard.tsx";
+import StudentIndividualAssigment from "./pages/StudentIndividualAssigment.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -45,6 +49,17 @@ createRoot(document.getElementById("root")!).render(
           </Route>
 
           {/* Private Routes for Students */}
+          <Route element={<StudentRoute />}>
+            <Route
+              path="/student/assignments"
+              element={<StudentAssignment />}
+            />
+            <Route
+              path="/student/assignments/:id"
+              element={<StudentIndividualAssigment />}
+            />
+            <Route path="/student/dashboard" element={<StudentDashboard />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

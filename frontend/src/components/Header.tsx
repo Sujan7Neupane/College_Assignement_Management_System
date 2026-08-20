@@ -34,6 +34,14 @@ const Header = () => {
     }
   };
 
+  // dynamic urls
+  const dynamicPath =
+    userInfo?.role === "STUDENT"
+      ? "/student"
+      : userInfo?.role === "TEACHER"
+        ? "/teacher"
+        : "/admin";
+
   return (
     <header className="navbar bg-base-100 border-b border-base-300 px-4 lg:px-8">
       {/* Mobile Menu */}
@@ -57,38 +65,41 @@ const Header = () => {
 
               <ul className="menu bg-base-100 min-h-full w-72 p-4">
                 <li className="mb-4">
-                  <Link
-                    to={userInfo ? "/teacher/dashboard" : "/"}
-                    className="flex items-center gap-2 text-xl font-bold"
-                  >
-                    <BookOpen className="text-primary" size={26} />
-                    <span>CourseDesk</span>
-                  </Link>
+                  {/* Logo */}
+                  <div className="flex-1">
+                    <Link
+                      to={`${dynamicPath}/dashboard`}
+                      className="flex items-center gap-2 text-xl font-bold"
+                    >
+                      <BookOpen className="text-primary" size={26} />
+                      <span>CourseDesk</span>
+                    </Link>
+                  </div>
                 </li>
 
                 <li>
-                  <Link to="/teacher/dashboard">
+                  <Link to={`${dynamicPath}/dashboard`}>
                     <LayoutDashboard size={18} />
                     Dashboard
                   </Link>
                 </li>
 
                 <li>
-                  <Link to="/teacher/assignments">
+                  <Link to={`${dynamicPath}/assignments`}>
                     <ClipboardList size={18} />
                     Assignments
                   </Link>
                 </li>
 
                 <li>
-                  <Link to="/teacher/submissions">
+                  <Link to={`${dynamicPath}/submissions`}>
                     <FileText size={18} />
                     Submissions
                   </Link>
                 </li>
 
                 <li>
-                  <Link to="/teacher/profile">
+                  <Link to={`${dynamicPath}/profile`}>
                     <User size={18} />
                     Profile
                   </Link>
@@ -101,7 +112,7 @@ const Header = () => {
 
       <div className="flex-1">
         <Link
-          to={userInfo ? "/teacher/dashboard" : "/"}
+          to={userInfo ? `${dynamicPath}/dashboard` : "/"}
           className="flex items-center gap-2 text-xl font-bold"
         >
           <BookOpen className="text-primary" size={26} />
@@ -114,15 +125,15 @@ const Header = () => {
         <div className="hidden md:flex">
           <ul className="menu menu-horizontal gap-1">
             <li>
-              <Link to="/teacher/dashboard">Dashboard</Link>
+              <Link to={`${dynamicPath}/dashboard`}>Dashboard</Link>
             </li>
 
             <li>
-              <Link to="/teacher/assignments">Assignments</Link>
+              <Link to={`${dynamicPath}/assignments`}>Assignments</Link>
             </li>
 
             <li>
-              <Link to="/teacher/submissions">Submissions</Link>
+              <Link to={`${dynamicPath}/submissions`}>Submissions</Link>
             </li>
           </ul>
         </div>

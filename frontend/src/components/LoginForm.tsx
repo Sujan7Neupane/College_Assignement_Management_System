@@ -23,15 +23,19 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const [login, { isLoading, isError }] = useLoginMutation();
+  const [login, { isLoading, isError, error }] = useLoginMutation();
   const { userInfo } = useSelector((state: any) => state.auth);
-  console.log(userInfo);
+  // console.log(userInfo);
 
   useEffect(() => {
     if (!userInfo) return;
 
     if (userInfo.role === "TEACHER") {
       navigate("/teacher/dashboard");
+    } else if (userInfo.role === "STUDENT") {
+      navigate("/student/dashboard");
+    } else if (userInfo.role === "ADMIN") {
+      navigate("/admin/dashboard");
     }
   }, [userInfo, navigate]);
 
@@ -44,7 +48,7 @@ const LoginForm = () => {
       //   console.log(response.message);
     } catch (error: any) {
       console.log(error.message);
-      toast.error(error?.message || "Login Failed");
+      toast.error(error?.data?.message || "Login Failed");
     }
   };
 
@@ -139,7 +143,7 @@ const LoginForm = () => {
 
             {isError && (
               <p className="text-red-500 text-sm mt-1 ml-2">
-                Invalid email or password.
+                {error?.data?.message || "Login failed"}
               </p>
             )}
 
