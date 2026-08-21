@@ -22,6 +22,8 @@ import StudentIndividualAssigment from "./pages/StudentIndividualAssigment.tsx";
 import StudentSubmissionsPage from "./pages/StudentSubmissionsPage.tsx";
 import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage.tsx";
 import IndividualSubmissionPage from "./pages/IndividualSubmissionPage.tsx";
+import StudentProfile from "./pages/StudentProfile.tsx";
+import StudentProfileEdit from "./pages/StudentProfileEdit.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -73,6 +75,12 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/student/submissions"
               element={<StudentSubmissionsPage />}
+            />
+            <Route path="/student/profile" element={<StudentProfile />} />
+
+            <Route
+              path="student/profile/edit"
+              element={<StudentProfileEdit />}
             />
           </Route>
         </Route>

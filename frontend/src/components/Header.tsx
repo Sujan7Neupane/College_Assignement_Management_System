@@ -164,7 +164,7 @@ const Header = () => {
               className="menu dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-base-300"
             >
               <li>
-                <Link to="/teacher/profile">
+                <Link to={`${dynamicPath}/profile`}>
                   <User size={16} />
                   Profile
                 </Link>
