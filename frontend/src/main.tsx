@@ -19,6 +19,9 @@ import StudentRoute from "./components/StudentRoute.tsx";
 import StudentAssignment from "./pages/StudentAssignment.tsx";
 import StudentDashboard from "./pages/StudentDashboard.tsx";
 import StudentIndividualAssigment from "./pages/StudentIndividualAssigment.tsx";
+import StudentSubmissionsPage from "./pages/StudentSubmissionsPage.tsx";
+import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage.tsx";
+import IndividualSubmissionPage from "./pages/IndividualSubmissionPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -46,6 +49,14 @@ createRoot(document.getElementById("root")!).render(
               path="teacher/profile/edit"
               element={<EditTeacherProfile />}
             />
+            <Route
+              path="teacher/submissions"
+              element={<TeacherSubmissionsPage />}
+            />
+            <Route
+              path="teacher/assignments/:id/submissions"
+              element={<IndividualSubmissionPage />}
+            />
           </Route>
 
           {/* Private Routes for Students */}
@@ -59,6 +70,10 @@ createRoot(document.getElementById("root")!).render(
               element={<StudentIndividualAssigment />}
             />
             <Route path="/student/dashboard" element={<StudentDashboard />} />
+            <Route
+              path="/student/submissions"
+              element={<StudentSubmissionsPage />}
+            />
           </Route>
         </Route>
       </Routes>

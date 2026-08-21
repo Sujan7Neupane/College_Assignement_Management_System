@@ -126,6 +126,9 @@ const getAssignmentSubmissions = async (req: Request, res: Response) => {
     const { assignmentId } = req.params;
     const { id: teacherId } = req.user;
 
+    // console.log(assignmentId);
+    // console.log(teacherId);
+
     const assignment = await prisma.assignment.findFirst({
       where: {
         id: Number(assignmentId),
@@ -159,6 +162,55 @@ const getAssignmentSubmissions = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: "Assignment submissions fetched successfully!",
+      submissions,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      error: error.message || "Internal server error",
+    });
+  }
+};
+
+const getTeacherSubmissions = async (req: Request, res: Response) => {
+  try {
+    const { id: teacherId } = req.user;
+
+    const submissions = await prisma.submission.findMany({
+      where: {
+        assignment: {
+          teacherId: Number(teacherId),
+        },
+      },
+
+      select: {
+        id: true,
+        assignmentId: true,
+        status: true,
+        grade: true,
+        submittedAt: true,
+
+        student: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+
+        assignment: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({
+      message: "Teacher submissions fetched successfully!",
       submissions,
     });
   } catch (error: any) {
@@ -219,7 +271,12 @@ const getSubmissionById = async (req: Request, res: Response) => {
 const gradeStudentAssignments = async (req: Request, res: Response) => {
   try {
     const { id: teacherId } = req.user;
+    // console.log("TeacherId:", teacherId);
+
     const { submissionId } = req.params;
+    // console.log(submissionId);
+    // console.log(typeof submissionId);
+    // console.log(Number(submissionId));
 
     const { grade, feedback } = req.body;
     if (grade < 0 || grade > 100) {
@@ -239,6 +296,8 @@ const gradeStudentAssignments = async (req: Request, res: Response) => {
       });
     }
 
+    // console.log(loggedInTeacher);
+
     const existingSubmission = await prisma.submission.findUnique({
       where: {
         id: Number(submissionId),
@@ -247,6 +306,9 @@ const gradeStudentAssignments = async (req: Request, res: Response) => {
         assignment: true,
       },
     });
+
+    // console.log("Existing Submission", existingSubmission);
+
     if (
       !existingSubmission ||
       existingSubmission?.assignment?.teacherId !== Number(teacherId)
@@ -267,7 +329,7 @@ const gradeStudentAssignments = async (req: Request, res: Response) => {
       },
       data: {
         grade,
-        feedback: existingSubmission.feedback,
+        feedback,
         status: "GRADED",
       },
       select: {
@@ -278,6 +340,8 @@ const gradeStudentAssignments = async (req: Request, res: Response) => {
         updatedAt: true,
       },
     });
+
+    // console.log("updatedSubmission:", updatedSubmission);
 
     return res.json({
       message: "Assignment graded successfully!",
@@ -296,4 +360,5 @@ export {
   getAssignmentSubmissions,
   getSubmissionById,
   gradeStudentAssignments,
+  getTeacherSubmissions,
 };

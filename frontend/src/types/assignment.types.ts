@@ -17,6 +17,8 @@ export interface Assignment {
   fileUrl: string;
   teacherId: number;
   teacher: Teacher;
+  grade: number;
+  feedback: string;
 
   submissions: Submission[];
   createdAt: string;

@@ -6,6 +6,7 @@ import {
   getAssignmentSubmissions,
   getMySubmissions,
   getSubmissionById,
+  getTeacherSubmissions,
   gradeStudentAssignments,
 } from "../controllers/submission.controllers.ts";
 
@@ -24,6 +25,9 @@ router.post(
 router.get("/my", checkAuth, isStudent, getMySubmissions);
 
 // for teacher -> all submissions per assignment
+router.get("/teacher", checkAuth, isTeacher, getTeacherSubmissions);
+
+// For individual assignment
 router.get(
   "/assignment/:assignmentId",
   checkAuth,
