@@ -71,6 +71,15 @@ const getTeachersAssignment = async (req: Request, res: Response) => {
       where: {
         teacherId,
       },
+
+      include: {
+        submissions: {
+          select: {
+            status: true,
+          },
+        },
+      },
+
       orderBy: {
         createdAt: "desc",
       },

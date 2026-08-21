@@ -6,7 +6,7 @@ import { Link } from "react-router";
 
 const StudentAssignment = () => {
   const { data: assignments, isLoading, isError } = useGetAllAssignmentsQuery();
-  console.log(assignments);
+  // console.log(assignments);
 
   return (
     <>
