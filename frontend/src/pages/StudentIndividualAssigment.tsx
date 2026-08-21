@@ -16,7 +16,7 @@ const StudentIndividualAssigment = () => {
     isError,
   } = useGetAssignmentByIdQuery(id || "");
 
-  //   console.log(assignment);
+  console.log(assignment);
 
   const [submitAssignment, { isLoading: isSubmissionLoading }] =
     useSubmitAssignmentMutation();
@@ -77,14 +77,20 @@ const StudentIndividualAssigment = () => {
                   <div className="mt-4">
                     <span
                       className={`badge ${
-                        assignment.assignment.submissions.length > 0
-                          ? "badge-success text-white"
-                          : "badge-warning text-white"
+                        assignment.assignment.submissions.length === 0
+                          ? "badge-warning text-white"
+                          : assignment.assignment.submissions[0].status ===
+                              "GRADED"
+                            ? "badge-success text-white"
+                            : "badge-info text-white"
                       }`}
                     >
-                      {assignment.assignment.submissions.length > 0
-                        ? "Submitted"
-                        : "Not Submitted"}
+                      {assignment.assignment.submissions.length === 0
+                        ? "Not Submitted"
+                        : assignment.assignment.submissions[0].status ===
+                            "GRADED"
+                          ? "GRADED"
+                          : "Submitted"}
                     </span>
                   </div>
                 </div>

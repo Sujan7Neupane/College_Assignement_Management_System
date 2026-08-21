@@ -36,7 +36,6 @@ const StudentSubmissionsPage = () => {
                     key={submission.id}
                     className="rounded-xl bg-base-100 p-6 shadow-sm"
                   >
-                    {/* Header */}
                     <div className="flex flex-col gap-4 border-b border-base-300 pb-5 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <h2 className="text-xl font-semibold">
@@ -51,8 +50,8 @@ const StudentSubmissionsPage = () => {
                       <span
                         className={`badge ${
                           submission.status === "GRADED"
-                            ? "badge-success"
-                            : "badge-warning"
+                            ? "badge-success text-white"
+                            : "badge-warning text-white"
                         }`}
                       >
                         {submission.status}
@@ -147,7 +146,7 @@ const StudentSubmissionsPage = () => {
                             </p>
 
                             <p className="mt-1 text-xl font-bold">
-                              {submission.assignment.grade}
+                              {submission.grade}
                             </p>
                           </div>
 
@@ -157,8 +156,7 @@ const StudentSubmissionsPage = () => {
                             </p>
 
                             <p className="mt-1 leading-6 text-base-content/70">
-                              {submission.assignment.feedback ||
-                                "No feedback provided."}
+                              {submission.feedback || "No feedback provided."}
                             </p>
                           </div>
                         </div>
