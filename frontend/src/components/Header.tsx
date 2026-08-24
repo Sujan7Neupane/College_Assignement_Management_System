@@ -44,7 +44,6 @@ const Header = () => {
 
   return (
     <header className="navbar bg-base-100 border-b border-base-300 px-4 lg:px-8">
-      {/* Mobile Menu */}
       {userInfo && (
         <div className="flex-none md:hidden">
           <div className="drawer">
@@ -65,7 +64,6 @@ const Header = () => {
 
               <ul className="menu bg-base-100 min-h-full w-72 p-4">
                 <li className="mb-4">
-                  {/* Logo */}
                   <div className="flex-1">
                     <Link
                       to={`${dynamicPath}/dashboard`}
@@ -84,19 +82,32 @@ const Header = () => {
                   </Link>
                 </li>
 
-                <li>
-                  <Link to={`${dynamicPath}/assignments`}>
-                    <ClipboardList size={18} />
-                    Assignments
-                  </Link>
-                </li>
+                {userInfo.role !== "ADMIN" && (
+                  <>
+                    <li>
+                      <Link to={`${dynamicPath}/assignments`}>
+                        <ClipboardList size={18} />
+                        Assignments
+                      </Link>
+                    </li>
 
-                <li>
-                  <Link to={`${dynamicPath}/submissions`}>
-                    <FileText size={18} />
-                    Submissions
-                  </Link>
-                </li>
+                    <li>
+                      <Link to={`${dynamicPath}/submissions`}>
+                        <FileText size={18} />
+                        Submissions
+                      </Link>
+                    </li>
+                  </>
+                )}
+
+                {userInfo.role === "ADMIN" && (
+                  <li>
+                    <Link to="/admin/users">
+                      <User size={18} />
+                      Users
+                    </Link>
+                  </li>
+                )}
 
                 <li>
                   <Link to={`${dynamicPath}/profile`}>
@@ -128,13 +139,23 @@ const Header = () => {
               <Link to={`${dynamicPath}/dashboard`}>Dashboard</Link>
             </li>
 
-            <li>
-              <Link to={`${dynamicPath}/assignments`}>Assignments</Link>
-            </li>
+            {userInfo.role !== "ADMIN" && (
+              <>
+                <li>
+                  <Link to={`${dynamicPath}/assignments`}>Assignments</Link>
+                </li>
 
-            <li>
-              <Link to={`${dynamicPath}/submissions`}>Submissions</Link>
-            </li>
+                <li>
+                  <Link to={`${dynamicPath}/submissions`}>Submissions</Link>
+                </li>
+              </>
+            )}
+
+            {userInfo.role === "ADMIN" && (
+              <li>
+                <Link to="/admin/users">Users</Link>
+              </li>
+            )}
           </ul>
         </div>
       )}

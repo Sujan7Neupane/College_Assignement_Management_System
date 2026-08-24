@@ -5,7 +5,15 @@ import { clearCookie, setToken } from "../utils/createJwtToken.ts";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+      },
+    });
     res.json({
       message: "Users fetched successfully!",
       users,
@@ -13,6 +21,226 @@ const getAllUsers = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       error: error.message || "Internal server error",
+    });
+  }
+};
+
+const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.json({
+      message: "User fetched successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch user",
+    });
+  }
+};
+
+const updateUserRole = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    // console.log(role);
+
+    if (!role) {
+      return res.status(400).json({
+        message: "Role is required",
+      });
+    }
+
+    if (!["STUDENT", "TEACHER", "ADMIN"].includes(role)) {
+      return res.status(400).json({
+        message: "Invalid role",
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        role,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+    // console.log(updatedUser);
+
+    res.json({
+      message: "User role updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to update user role",
+    });
+  }
+};
+
+const adminCreateUser = async (req: Request, res: Response) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User with this email already exists",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role,
+        status: "ACTIVE",
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+
+    res.status(201).json({
+      message: "User created successfully",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to create user",
+    });
+  }
+};
+
+const updateAdminProfile = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    // console.log(req.user);
+
+    // console.log(id);
+
+    const { name, email, currentPassword, newPassword } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // no change password = old password
+    let password = user.password;
+
+    if (newPassword) {
+      const isPasswordCorrect = await bcrypt.compare(
+        currentPassword,
+        user.password,
+      );
+
+      // console.log(isPasswordCorrect);
+
+      if (!isPasswordCorrect) {
+        return res.status(401).json({
+          message: "Current password is incorrect",
+        });
+      }
+
+      // change password =new password
+      password = await bcrypt.hash(newPassword, 10);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        email,
+        password,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+      },
+    });
+
+    // console.log(updatedUser);
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to update profile",
     });
   }
 };
@@ -183,7 +411,9 @@ const userLogin = async (req: Request, res: Response) => {
     // console.log(loggedInUser);
 
     if (!loggedInUser)
-      return res.status(404).json({ message: "Invalid email or password" });
+      return res
+        .status(404)
+        .json({ message: "No user found. Please Register." });
 
     const isPasswordMatching = await bcrypt.compare(
       password,
@@ -320,6 +550,10 @@ const editProfile = async (req: Request, res: Response) => {
 
 export {
   getAllUsers,
+  getUserById,
+  updateUserRole,
+  adminCreateUser,
+  updateAdminProfile,
   approveUser,
   disableUserAccount,
   deleteUserAccount,

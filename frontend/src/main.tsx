@@ -24,6 +24,13 @@ import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage.tsx";
 import IndividualSubmissionPage from "./pages/IndividualSubmissionPage.tsx";
 import StudentProfile from "./pages/StudentProfile.tsx";
 import StudentProfileEdit from "./pages/StudentProfileEdit.tsx";
+import AdminRoute from "./components/AdminRoute.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
+import AdminManageUser from "./pages/AdminManageUser.tsx";
+import AdminUserDetail from "./pages/AdminUserDetails.tsx";
+import AdminAddUser from "./pages/AdminAddUser.tsx";
+import AdminProfile from "./pages/AdminProfile.tsx";
+import EditAdminProfile from "./pages/EditAdminProfile.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -82,6 +89,16 @@ createRoot(document.getElementById("root")!).render(
               path="student/profile/edit"
               element={<StudentProfileEdit />}
             />
+          </Route>
+
+          {/* Private Routes for admin user */}
+          <Route element={<AdminRoute />}>
+            <Route path="admin/dashboard" element={<AdminDashboard />} />
+            <Route path="admin/users" element={<AdminManageUser />} />
+            <Route path="admin/users/:id" element={<AdminUserDetail />} />
+            <Route path="admin/users/add" element={<AdminAddUser />} />
+            <Route path="admin/profile" element={<AdminProfile />} />
+            <Route path="admin/profile/edit" element={<EditAdminProfile />} />
           </Route>
         </Route>
       </Routes>

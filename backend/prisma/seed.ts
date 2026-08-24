@@ -18,6 +18,7 @@ async function main() {
       email,
     },
     update: {
+      password: hashedPassword,
       role: "ADMIN",
       status: "ACTIVE",
     },

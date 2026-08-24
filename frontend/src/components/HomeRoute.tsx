@@ -17,6 +17,10 @@ const HomeRoute = () => {
     return <Navigate to="/student/dashboard" replace />;
   }
 
+  if (userInfo.role === "ADMIN") {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
   return <HomePage />;
 };
 
