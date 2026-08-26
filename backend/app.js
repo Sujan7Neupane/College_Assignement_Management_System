@@ -1,5 +1,5 @@
 import express from "express";
-import "dotenv/config";
+// import "dotenv/config";
 import cookieParser from "cookie-parser";
 
 import userRouter from "./routes/user.routes.ts";
