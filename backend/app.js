@@ -7,9 +7,17 @@ import assignmentRouter from "./routes/assignment.routes.ts";
 import submissionRouter from "./routes/submission.routes.ts";
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(
+  cors({
+    origin: process.env.BASE_URL,
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 app.use(cookieParser());
-const PORT = process.env.PORT || 5000;
 
 app.use("/api/auth", userRouter);
 app.use("/api/assignments", assignmentRouter);
