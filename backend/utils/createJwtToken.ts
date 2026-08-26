@@ -23,7 +23,7 @@ export function setToken({ id, role, res }: setTokenProps) {
   res.cookie("jwtToken", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    sameSite: "lax",
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 }
@@ -32,6 +32,6 @@ export const clearCookie = (res: Response) => {
   res.clearCookie("jwtToken", {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
+    sameSite: "lax",
   });
 };
