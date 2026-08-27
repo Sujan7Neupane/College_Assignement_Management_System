@@ -12,7 +12,7 @@ const TeacherDashboard = () => {
     isError,
   } = useGetTeachersAssignmentQuery();
 
-  console.log(assignments);
+  // console.log(assignments);
 
   const totalSubmissions = assignments?.assignments.filter(
     (assignment) =>
