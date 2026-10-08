@@ -113,7 +113,7 @@ async function main() {
 
 main()
   .catch((error) => {
-    console.error(error);
+    console.dir(error, { depth: null });
     process.exit(1);
   })
   .finally(async () => {
